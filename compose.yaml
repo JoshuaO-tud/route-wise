@@ -1,0 +1,84 @@
+services:
+  db:
+    image: postgis/postgis:17-3.5
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgis_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - routewise_net
+
+  pgadmin:
+    image: dpage/pgadmin4:9
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - "127.0.0.1:5052:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - routewise_net
+
+  web:
+    build:
+      context: ./backend
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./backend:/app
+    ports:
+      - "127.0.0.1:8010:8000"
+    environment:
+      DATABASE_NAME: ${POSTGRES_DB}
+      DATABASE_USER: ${POSTGRES_USER}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      SECRET_KEY: ${DJANGO_SECRET_KEY}
+      DEBUG: ${DJANGO_DEBUG}
+      ALLOWED_HOSTS: localhost,127.0.0.1
+      VALHALLA_URL: http://valhalla:8002
+    depends_on:
+      db:
+        condition: service_healthy
+      valhalla:
+        condition: service_started
+    networks:
+      - routewise_net
+
+  valhalla:
+    image: ghcr.io/valhalla/valhalla-scripted:latest
+    volumes:
+      - ./data/valhalla:/custom_files
+    environment:
+      server_threads: "2"
+      use_tiles_ignore_pbf: "False"
+      build_admins: "False"
+      build_time_zones: "False"
+      build_elevation: "False"
+      build_transit: "False"
+    ports:
+      - "127.0.0.1:8012:8002"
+    networks:
+      - routewise_net
+
+volumes:
+  postgis_data:
+  pgadmin_data:
+
+networks:
+  routewise_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.30.55.0/24

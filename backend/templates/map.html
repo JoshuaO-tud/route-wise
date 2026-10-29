@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f3ee">
+  <title>RouteWise Dublin | Route context</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="/static/css/app.css">
+</head>
+<body>
+  <main class="app-shell">
+    <aside class="sidebar" aria-label="RouteWise controls">
+      <header class="brand">
+        <div class="brand-mark" aria-hidden="true">R</div>
+        <div><p class="eyebrow">DUBLIN · ROUTE CONTEXT</p><h1>RouteWise</h1></div>
+      </header>
+      <p class="intro">Compare walking routes with the mapped information behind them.</p>
+      <section class="panel" aria-labelledby="layers-heading">
+        <div class="section-heading"><div><p class="eyebrow">MAP DATA</p><h2 id="layers-heading">Explore the area</h2></div><span class="live-dot" aria-hidden="true"></span></div>
+        <p class="muted">Turn on a layer to see what has been mapped. Missing data stays visible as a gap.</p>
+        <label class="layer-row"><input type="checkbox" data-layer="lighting-assets"><span class="swatch light-swatch"></span><span><strong>Lighting assets</strong><small>Recorded locations</small></span></label>
+        <label class="layer-row"><input type="checkbox" data-layer="street-segments"><span class="swatch street-swatch"></span><span><strong>Street information</strong><small>Path type and lighting tags</small></span></label>
+        <label class="layer-row"><input type="checkbox" data-layer="avoidance-areas"><span class="swatch avoid-swatch"></span><span><strong>Avoidance areas</strong><small>Areas marked for exclusion</small></span></label>
+        <p id="data-status" class="status" role="status">Loading mapped features…</p>
+      </section>
+      <section class="note" aria-label="How to interpret the map"><span class="note-icon" aria-hidden="true">i</span><p><strong>Map context, not a safety rating.</strong><br>Public records can be incomplete or out of date. A mapped light does not confirm it is working.</p></section>
+      <footer>RouteWise Dublin <span>·</span> Student mapping project</footer>
+    </aside>
+    <section class="map-region" aria-label="Interactive map of central Dublin">
+      <div id="map" role="application" aria-label="Map. Use the zoom controls to explore."></div>
+      <div class="map-caption"><span class="caption-dot"></span><span>Central Dublin</span><span class="caption-separator">/</span><span id="zoom-label">Zoom 13</span></div>
+      <button id="recenter" class="recenter" type="button" aria-label="Return to central Dublin">⌖ <span>Recenter</span></button>
+    </section>
+  </main>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="/static/js/map.js" defer></script>
+</body>
+</html>

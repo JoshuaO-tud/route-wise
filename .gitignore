@@ -1,0 +1,23 @@
+# Local planning notes are not CA1 submission files
+/PROJECT_PLAN.md
+/DATA_SOURCE_AUDIT.md
+
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+.venv/
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local data and generated routing graph (large/licensed source files)
+data/*
+!data/.gitkeep
+valhalla_tiles/
